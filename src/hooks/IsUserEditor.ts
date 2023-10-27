@@ -4,16 +4,16 @@ import useUserSession from "./useUserSession";
 export const IsUserEditor = () => {
   const user = useUserSession();
 
-  if (!user?.id) return false;
-
-  const userData = api.users.getById.useQuery(
+  const userData = api && api.users ? api.users.getById.useQuery(
     {
-      id: user?.id,
+      id: user?.id ? user?.id : "",
     },
     {
       enabled: !!user?.id,
     }
-  );
+  ): null;
+
+  if (!userData) return false;
 
   return userData?.data?.role === "ADMIN" || userData?.data?.role === "MOD";
 };
